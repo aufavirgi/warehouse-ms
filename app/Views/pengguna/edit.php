@@ -16,12 +16,13 @@
                     </div>
                     <div class="form-group">
                         <label for="">Nama Pengguna</label>
-                        <input type="text" name="pen_nama" class="form-control"
+                        <input required type="text" name="pen_nama" class="form-control"
                             value="<?php echo $pengguna['pen_nama']; ?>" placeholder="Nama Pengguna">
                     </div>
                     <div class="form-group">
                         <label for="">Role Pengguna</label>
-                        <select name="pen_role" class="form-control">
+                        <select required name="pen_role" class="form-control">
+                            <option disabled selected>Pilih Role... </option>
                             <option selected value="<?php echo $pengguna['pen_role']; ?>">
                                 <?php echo $pengguna['pen_role']; ?>
                             </option>
@@ -33,7 +34,7 @@
                     </div>
                     <div class="form-group">
                         <label for="">Kata Sandi</label>
-                        <input type="text" name="pen_password" class="form-control"
+                        <input required type="text" name="pen_password" class="form-control"
                             value="<?php echo $pengguna['pen_password']; ?>" placeholder="Kata Sandi">
                     </div>
                     <div class="form-group">

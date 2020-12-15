@@ -11,16 +11,17 @@
                 <form action="<?php echo base_url('pengguna/store'); ?>" method="post">
                     <div class="form-group">
                         <label for="">NPK Pengguna</label>
-                        <input maxlength="16" type="text" name="pen_npk" class="form-control"
+                        <input required maxlength="16" type="text" name="pen_npk" class="form-control"
                             placeholder="NPK Pengguna">
                     </div>
                     <div class="form-group">
                         <label for="">Nama Pengguna</label>
-                        <input type="text" name="pen_nama" class="form-control" placeholder="Nama Pengguna">
+                        <input required type="text" name="pen_nama" class="form-control" placeholder="Nama Pengguna">
                     </div>
                     <div class="form-group">
                         <label for="">Role Pengguna</label>
-                        <select name="pen_role" class="form-control">
+                        <select required name="pen_role" class="form-control">
+                            <option disabled selected>Pilih Role... </option>
                             <option value="Receiver">Receiver</option>
                             <option value="Operator">Operator</option>
                             <option value="Dispatcher">Dispatcher</option>
@@ -29,7 +30,7 @@
                     </div>
                     <div class="form-group">
                         <label for="">Kata Sandi</label>
-                        <input type="text" name="pen_password" class="form-control" placeholder="Kata Sandi">
+                        <input required type="text" name="pen_password" class="form-control" placeholder="Kata Sandi">
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Simpan</button>

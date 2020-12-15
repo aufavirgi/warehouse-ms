@@ -88,7 +88,7 @@
                                     <ul>
                                         <li>
                                             <a href=""><i class="icon-user"></i>
-                                                <span>Profile</span></a>
+                                                <span><?php $sesi = session(); echo "Hello, ".$sesi->get('pen_nama'); ?></span></a>
                                         </li>
                                         <li>
                                             <a href="javascript:void()">
@@ -102,7 +102,8 @@
                                             <a href=""><i class="icon-lock"></i> <span>Lock
                                                     Screen</span></a>
                                         </li>
-                                        <li><a href=""><i class="icon-key"></i> <span>Logout</span></a>
+                                        <li><a href="<?=  base_url('login/logout')?>"><i class="icon-key"></i>
+                                                <span>Logout</span></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -126,7 +127,7 @@
                     <ul class="metismenu in" id="menu">
 
                         <li class="mega-menu mega-menu-sm">
-                            <a href="" aria-expanded="false">
+                            <a href="<?=  base_url('dashboard/index')?>" aria-expanded="false">
                                 <i class="icon-home menu-icon"></i><span class="nav-text">Home</span>
                             </a>
                         </li>
@@ -151,14 +152,6 @@
                                 <i class="icon-badge menu-icon"></i><span class="nav-text">Kelola Data Barang</span>
                             </a>
                         </li>
-                        <li class="nav-label">Akses</li>
-                        <li>
-                            <a href="<?=  base_url('akses/index')?>" aria-expanded="false">
-                                <i class="icon-sign-out menu-icon"></i><span class="nav-text">Log Out</span>
-                            </a>
-                        </li>
-
-
                     </ul>
                 </div>
                 <div class="slimScrollBar"

@@ -13,7 +13,7 @@
                         <label for="">Sektor</label>
                         <select name="rak_sektor" class="form-control custom-select-value"
                             required="Tidak boleh kosong">
-                            <option disabled selected>-- Pilih Jenis --</option>
+                            <option disabled selected>Pilih Sektor... </option>
                             <?php
                                     foreach ($sektor as $row) {
                                                                     ?>
@@ -24,13 +24,14 @@
                     </div>
                     <div class="form-group">
                         <label for="">Nama Rak</label>
-                        <input maxlength="10" type="text" name="rak_nama" class="form-control" placeholder="Nama Rak">
+                        <input required maxlength="10" type="text" name="rak_nama" class="form-control"
+                            placeholder="Nama Rak">
                     </div>
                     <div class="form-group">
                         <label for="">Kapasitas Maksimal Rak</label>
                         <div class="input-group mb-3">
-                            <input maxlength="4" type="text" name="rak_max_capacity" class="form-control col-md-3"
-                                placeholder="Maksimal Kapasitas">
+                            <input required maxlength="4" type="text" name="rak_max_capacity"
+                                class="form-control col-md-3" placeholder="Maksimal Kapasitas">
                             <div class="input-group-append">
                                 <span class="input-group-text">Palette</span>
                             </div>

@@ -17,7 +17,7 @@
                     <div class="form-group">
                         <label for="">Nama Sektor</label>
                         <select name="rak_sektor" class="form-control border-input">
-                            <option disabled selected>-- Pilih Sektor --</option>
+                            <option disabled selected>Pilih Sektor... </option>
                             <?php
                                 foreach ($sektor as $row) {
                                     if($rak['rak_sektor'] == $row->sek_id){
@@ -36,13 +36,13 @@
                     </div>
                     <div class="form-group">
                         <label for="">Nama Rak</label>
-                        <input maxlength="10" type="text" name="rak_nama" value="<?php echo $rak['rak_nama'] ?>"
-                            class="form-control" placeholder="Nama Rak">
+                        <input required maxlength="10" type="text" name="rak_nama"
+                            value="<?php echo $rak['rak_nama'] ?>" class="form-control" placeholder="Nama Rak">
                     </div>
                     <div class="form-group">
                         <label for="">Kapasitas Maksimal Rak</label>
                         <div class="input-group mb-3">
-                            <input maxlength="4" type="text" name="rak_max_capacity"
+                            <input required maxlength="4" type="text" name="rak_max_capacity"
                                 value="<?php echo $rak['rak_max_capacity'] ?>" class="form-control col-md-3"
                                 placeholder="Maksimal Kapasitas">
                             <div class="input-group-append">
