@@ -42,7 +42,9 @@ class Autoload extends AutoloadConfig
 	public $psr4 = [
 		APP_NAMESPACE => APPPATH, // For custom app namespace
 		'Config'      => APPPATH . 'Config',
-		'Wildanfuady' => APPPATH . 'ThirdParty/WFcart/Wildanfuady'
+		
+		// 'Wildanfuady' => APPPATH . 'ThirdParty/WFcart/Wildanfuady',
+		'Cart' 		  => APPPATH . '/Libraries/Cart.php'
 	];
 
 	/**

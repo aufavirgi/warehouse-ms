@@ -49,6 +49,23 @@
                         </div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="">Receiver</label>
+                            <select name="tr_receiver_id" id="pengguna" class="form-control custom-select-value"
+                                required="Tidak boleh kosong">
+                                <option disabled selected>Pilih Receiver... </option>
+                                <?php
+                                    foreach ($pengguna as $row) {
+                                                                    ?>
+                                <option value="<?php echo $row->pen_npk ?>">
+                                    <?php echo $row->pen_nama; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+
                     <div class="form-group">
                         <div class="table-resposive">
                             <table class="table table-bordered">
@@ -67,22 +84,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach($items as $key => $item) { ?>
+                                    <?php $i=1; $no=1;?>
+                                    <?php foreach($cart as $items) { ?>
                                     <tr>
-                                        <td><?php echo $key + 1; ?></td>
-                                        <td><?php echo $item['bar_id']; ?></td>
-                                        <td><?php echo $item['bar_kategori']; ?></td>
-                                        <td><?php echo $item['bar_nama']; ?></td>
-                                        <td><?php echo $item['tr_qty']; ?></td>
+                                        <td><?php echo $no; ?></td>
+                                        <td><?php echo $items['bar_id']; ?></td>
+                                        <td><?php echo $items['bar_kategori']; ?></td>
+                                        <td><?php echo $items['bar_nama']; ?></td>
+                                        <td><?php echo $items['qty']; ?></td>
                                         <td class="text-center">
                                             <div class="btn-group">
-                                                <a href="<?php echo base_url('receive/hapus_cart/'.$item['id']); ?>"
+                                                <a href="<?php echo base_url('receive/hapus_cart/'.$items['rowid']); ?>"
                                                     class="btn btn-danger btn-sm"
                                                     onclick="return confirm('Apakah Anda yakin ingin menghapus barang ini dari daftar barang masuk?')"><i
                                                         class="fa fa-trash"></i></a>
                                             </div>
                                         </td>
                                     </tr>
+                                    <?php $i++; $no++;?>
                                     <?php } ?>
                                 </tbody>
 
@@ -215,6 +234,7 @@ $(document).ready(function() {
             url: "<?= base_url('receive/cek_barang')?>",
             method: 'POST',
             async: true,
+            Cache: false,
             dataType: "json",
             data: {
                 id: id

@@ -9,8 +9,11 @@ use App\Models\MsBarangModel;
 use App\Models\MsPenggunaModel;
 use App\Models\TrReceiveDispatchModel;
 use App\Models\TrDetilModel;
+
+//library
+use App\Libraries\Cart;
 //thirdParty
-use Wildanfuady\WFcart\WFcart;
+// use Wildanfuady\WFcart\WFcart;
 
 class Receive extends Controller
 {
@@ -24,12 +27,12 @@ class Receive extends Controller
 
         $this->barang = new MsBarangModel();
         //---
-        $this->cart = new WFcart();
+        $this->cart = new Cart();
         // memanggil form helper
         helper('form');
         
         $this->receive = new TrReceiveDispatchModel();
-        $this->detil = new MsSektorModel();
+        $this->detil = new TrDetilModel();
         /* Catatan:
         Apa yang ada di dalam function construct ini nantinya bisa digunakan
         pada function di dalam class Product 
@@ -44,18 +47,20 @@ class Receive extends Controller
     
     public function create()
     {
-        $tr_id = $this->receive->select('tr_id', 'maxid')->get()->getResult();
+        $tr_id = $this->receive->selectMax('tr_id')->first();
+        $id_last = $tr_id['tr_id'];
         if($tr_id == null){
             $data['maxid'] = "TRS0001";
         }else {
-            $nourut = (int)substr($tr_id, 3, 4);
+            $nourut = (int)substr($id_last, 3, 4);
 			$nourut++;
 			$char = "TRS";
 			$id_tr = $char . sprintf("%04s", $nourut);
             $data['maxid'] = $id_tr;
         }
         //variabel untuk menampung data cart
-        $data['items'] = $this->cart->totals();
+        $data['pengguna'] = $this->pengguna->getReceiver();
+        $data['cart'] = $this->cart->contents();
         $data['sektor'] = $this->sektor->getSektor()->getResult();
         return view('receive/create', $data);
     }
@@ -89,21 +94,26 @@ class Receive extends Controller
     {
         $id = $this->request->getPost('bar_id');
         $data = array(
-            'id'             => $this->request->getPost('bar_id'),
-            'name'           => $this->request->getPost('bar_nama'),
+            'id'             => $this->request->getPost('bar_id'), //wajib
+            'name'           => $this->request->getPost('bar_nama'), //wajib
             'bar_id'         => $this->request->getPost('bar_id'),//input dari modal
             'bar_nama'       => $this->request->getPost('bar_nama'),
             'bar_kategori'   => $this->request->getPost('bar_kategori'),
-            'tr_qty'         => $this->request->getPost('tr_qty')
+            'price'         =>$this->request->getPost('tr_qty'), //wajib
+            'qty'       => $this->request->getPost('tr_qty') //wajib
         );
-        $this->cart->add_cart($id, $data);
+        $this->cart->insert($data);
         return redirect()->to('/receive/create');
-        // return redirect()->to('/login');
     }
 
     public function hapus_cart($id)
 	{
         $this->cart->remove($id);
+        // $data = array(
+        //     'rowid'    => $id,
+        //     'qty'   => 0,
+        // );
+        // $this->cart->update($data);
         return redirect()->to('/receive/create');
         // $data = array(
         //     'rowid'    => $id,
@@ -113,7 +123,7 @@ class Receive extends Controller
         // redirect('app/tambah_penjualan');
 	}
 
-    public function store()
+    public function store()//memasukkan data barang masuk
     {
         // Mengambil value dari form dengan method POST
         $tr_id = $this->request->getPost('tr_id');
@@ -121,24 +131,6 @@ class Receive extends Controller
         $rak_id = $this->request->getPost('rak_id');
         $tr_receiver_id = $this->request->getPost('tr_receiver_id');
 
-        //insert detil
-        foreach ($this->cart->contents() as $items) {
-        	$bar_id = $items['bar_id'];
-            $qty = $items['tr_qty'];
-            $stokBarang = $items['tr_qty'];
-            $jml_barang_masuk = 1;
-        	$d = array(
-        		'tr_id' => $tr_id,
-        		'bar_id' => $bar_id,
-        		'tr_qty' => $qty,
-        	);
-            $this->rak->insert_detil($d);
-            //update dan tambah stok barang --
-
-            //update dan tambah isi rak --
-        }
-    
-        // Membuat array collection yang disiapkan untuk insert ke table
         $data = [
             'tr_id' => $tr_id,
             'tr_date_in' => $tr_date_in,
@@ -152,8 +144,55 @@ class Receive extends Controller
         Membuat variabel simpan yang isinya merupakan memanggil function 
         insert_pengguna dan membawa parameter data 
         */
-        $simpan = $this->rak->insert_tr($data);
+        $simpan = $this->receive->insert_tr($data);
+
+        //insert detil
+        foreach ($this->cart->contents() as $items) {
+        	$bar_id = $items['bar_id'];
+            $qty = $items['qty'];
+            $stok_masuk = $items['qty'];
+            //insert detil
+        	$d = array(
+        		'tr_id' => $tr_id,
+        		'bar_id' => $bar_id,
+        		'tr_qty' => $qty,
+        	);
+            $this->detil->insert_detil($d);
+            //update dan tambah stok barang --
+
+            $data_barang = $this->barang->where('bar_id', $bar_id)
+            ->where('bar_status', 1)->first();
+            $stok_lama = $data_barang['bar_stok'];
+            $stok_baru = $stok_lama + $stok_masuk;
+
+            $data_update_barang = [
+                'bar_stok' => $stok_baru
+            ];
         
+            /* 
+            Membuat variabel ubah yang isinya merupakan memanggil function 
+            update_product dan membawa parameter data beserta id
+            */
+            $ubah_barang = $this->barang->update_barang($data_update_barang, $bar_id);
+            
+        }
+        //update dan tambah isi rak --
+        $jml_palette_masuk = 1;
+        $data_rak = $this->rak->where('rak_id', $rak_id)
+            ->where('rak_status', 1)->first();
+        $jml_palette_lama = $data_rak['rak_jml_isi'];
+        $jml_palette_baru = $jml_palette_lama + $jml_palette_masuk;
+
+        $data_update_rak = [
+            'rak_jml_isi' => $jml_palette_baru
+        ];
+    
+        $ubah_rak = $this->rak->update_rak($data_update_rak, $rak_id);
+        //-----------
+
+        // Membuat array collection yang disiapkan untuk insert ke table
+        
+        $this->cart->destroy();
     
         // Jika simpan berhasil, maka ...
         if($simpan)
@@ -161,17 +200,17 @@ class Receive extends Controller
             // Deklarasikan session flashdata dengan tipe success
             session()->setFlashdata('success', 'Data Rak Berhasil Disimpan!');
             // Redirect halaman ke product
-            return redirect()->to(base_url('rak')); 
+            return redirect()->to(base_url('receive/index')); 
         }
     }
     
-    public function edit($id)
+    public function view_detil($id)
     {
         // Memanggil function getPengguna($id) dengan parameter $id di dalam ProductModel dan menampungnya di variabel array product
-        $data['rak'] = $this->rak->getRak($id);
-        $data['sektor'] = $this->sektor->getSektor()->getResult();
+        $data['receive'] = $this->receive->getReceive($id);
+        $data['detil'] = $this->detil->getDetil($id)->getResult();
         // Mengirim data ke dalam view
-        return view('rak/edit', $data);
+        return view('receive/view_detil', $data);
     }
     
     public function update($id)

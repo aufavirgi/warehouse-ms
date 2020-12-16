@@ -52,6 +52,7 @@
                                     <tr role="row">
                                         <th>ID</th>
                                         <th>Tanggal Masuk</th>
+                                        <th>Nama Sektor</th>
                                         <th>Nama Rak</th>
                                         <th>Nama Receiver</th>
                                         <th>Status Receive</th>
@@ -63,14 +64,15 @@
                                         foreach($receive as $row) { ?>
                                     <tr role="row" class="odd">
                                         <td><?= $row->tr_id; ?></td>
-                                        <td><?= date_format(date_create($row->sek_nama),"d-F-Y"); ?></td>
+                                        <td><?= date_format(date_create($row->tr_date_in),"d-F-Y"); ?></td>
+                                        <td><?= $row->sek_nama; ?></td>
                                         <td><?= $row->rak_nama; ?></td>
                                         <td><?= $row->pen_nama; ?></td>
                                         <td><?= $row->tr_status_receive; ?></td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="<?= base_url('receive/detail/'.$row->tr_id); ?>"
-                                                    class="btn mb-1 btn-info btn-sm"><i class="fa fa-edit"></i></a>
+                                                <a href="<?= base_url('receive/view_detil/'.$row->tr_id); ?>"
+                                                    class="btn mb-1 btn-info btn-sm"><i class="fa fa-list"></i></a>
                                                 <a href="<?= base_url('receive/cancel/'.$row->tr_id); ?>"
                                                     class="btn mb-1 btn-danger btn-sm"
                                                     onclick="return confirm('Apakah Anda yakin ingin membatalkan transaksi <?= $row->tr_id; ?>?')"><i
@@ -84,6 +86,7 @@
                                     <tr>
                                         <th rowspan="1" colspan="1">ID</th>
                                         <th rowspan="1" colspan="1">Tanggal Masuk</th>
+                                        <th rowspan="1" colspan="1">Nama Sektor</th>
                                         <th rowspan="1" colspan="1">Nama Rak</th>
                                         <th rowspan="1" colspan="1">Nama Receiver</th>
                                         <th rowspan="1" colspan="1">Status Receive</th>

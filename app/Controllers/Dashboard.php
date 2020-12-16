@@ -15,4 +15,10 @@ class Dashboard extends Controller
         $session = session();
         echo view('dashboard/dashboard_admin_g');
     }
+
+    public function receiver()
+    {
+        $session = session();
+        echo view('dashboard/dashboard_receiver');
+    }
 }

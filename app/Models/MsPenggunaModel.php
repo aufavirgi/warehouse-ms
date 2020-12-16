@@ -30,6 +30,16 @@ class MsPenggunaModel extends Model
         }   
     }
     
+    public function getReceiver(){
+        $role = "Receiver";
+        $builder = $this->db->table('ms_pengguna')
+        ->select('pen_npk, pen_nama')
+        ->where('pen_role', $role)
+        ->where('pen_status', 1)
+        ->get();
+        return $builder->getResult();
+    }
+
     public function insert_pengguna($data)
     {
         return $this->db->table($this->table)->insert($data);

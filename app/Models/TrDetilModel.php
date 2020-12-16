@@ -15,14 +15,14 @@ class TrDetilModel extends Model
             // ->get();
             // return $builder;
             $builder = $this->db->table('detil_tr_barang');
-            $builder->select('tr_id, detil_tr_barang.bar_id, bar_nama, tr_qty');
+            $builder->select('tr_id, detil_tr_barang.bar_id, bar_nama, bar_kategori, tr_qty');
             $builder->join('ms_barang', 
             'detil_tr_barang.bar_id=ms_barang.bar_id');
             $builder->where('tr_id',$id);
             return $builder->get();
         } else {
             return $this->table('detil_tr_barang')
-                        ->select('tr_id, detil_tr_barang.bar_id, bar_nama, tr_qty')
+                        ->select('tr_id, detil_tr_barang.bar_id, bar_nama, bar_kategori, tr_qty')
                         ->join('ms_barang', 'detil_tr_barang.bar_id=ms_barang.bar_id')
                         ->where('tr_id', $id)
                         ->get();
