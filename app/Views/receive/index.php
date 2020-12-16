@@ -68,12 +68,30 @@
                                         <td><?= $row->sek_nama; ?></td>
                                         <td><?= $row->rak_nama; ?></td>
                                         <td><?= $row->pen_nama; ?></td>
-                                        <td><?= $row->tr_status_receive; ?></td>
+                                        <td><?php 
+                                                $case = $row->tr_status_receive;
+                                                switch ($case) {
+                                                case 1:
+                                                    echo "Request Pickup";
+                                                break;
+                                                case 2:
+                                                    echo "Receiver Picking up Palette";
+                                                break;
+                                                case 3:
+                                                    echo "Delivering...";
+                                                break;
+                                                case 4:
+                                                    echo "Putaway Completed";
+                                                break;
+                                                default:
+                                                    echo "Aborted";
+                                            } ?></td>
+                                        </td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="<?= base_url('receive/view_detil/'.$row->tr_id); ?>"
                                                     class="btn mb-1 btn-info btn-sm"><i class="fa fa-list"></i></a>
-                                                <a href="<?= base_url('receive/cancel/'.$row->tr_id); ?>"
+                                                <a href="<?= base_url('receive/aborting/'.$row->tr_id); ?>"
                                                     class="btn mb-1 btn-danger btn-sm"
                                                     onclick="return confirm('Apakah Anda yakin ingin membatalkan transaksi <?= $row->tr_id; ?>?')"><i
                                                         class="fa fa-trash"></i></a>

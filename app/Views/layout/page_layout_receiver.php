@@ -133,8 +133,8 @@
                         </li>
                         <li class="nav-label">List Palette Masuk</li>
                         <li>
-                            <a href="<?=  base_url('receive/index')?>" aria-expanded="false">
-                                <i class="icon-user menu-icon"></i><span class="nav-text">Transaksi Barang Masuk</span>
+                            <a href="<?=  base_url('receive/putaway_list')?>" aria-expanded="false">
+                                <i class="icon-note menu-icon"></i><span class="nav-text">Putaway Barang Masuk</span>
                             </a>
                         </li>
                     </ul>

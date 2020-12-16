@@ -212,6 +212,86 @@ class Receive extends Controller
         // Mengirim data ke dalam view
         return view('receive/view_detil', $data);
     }
+
+    public function putaway_list()
+    {
+        $sesi = session();
+        $receiver_id = $sesi->get('pen_npk');
+        $data['request'] = $this->receive->getRequestByAdmin($receiver_id)->getResult();
+        $data['pickup'] = $this->receive->getPickingUp($receiver_id)->getResult();
+        $data['deliver'] = $this->receive->getDelivering($receiver_id)->getResult();
+        $data['put'] = $this->receive->getPutPalette($receiver_id)->getResult();
+
+        return view('receive/putaway_list', $data);
+    }
+
+    public function pickingup($id)
+    {
+        $data = [
+            'tr_status_receive' => 2
+        ];
+        $update = $this->receive->update_tr($data, $id);
+    
+        // Jika berhasil melakukan hapus
+        if($update)
+        {
+                // Deklarasikan session flashdata dengan tipe warning
+            session()->setFlashdata('warning', 'Silahkan Mengambil Palette!');
+            // Redirect ke halaman product
+            return redirect()->to(base_url('receive/putaway_list'));
+        }
+    }
+
+    public function delivering($id)
+    {
+        $data = [
+            'tr_status_receive' => 3
+        ];
+        $update = $this->receive->update_tr($data, $id);
+    
+        // Jika berhasil melakukan hapus
+        if($update)
+        {
+                // Deklarasikan session flashdata dengan tipe warning
+            session()->setFlashdata('warning', 'Silahkan Masukkan Palette ke Rak!');
+            // Redirect ke halaman product
+            return redirect()->to(base_url('receive/putaway_list'));
+        }
+    }
+
+    public function putting($id)
+    {
+        $data = [
+            'tr_status_receive' => 4
+        ];
+        $update = $this->receive->update_tr($data, $id);
+    
+        // Jika berhasil melakukan hapus
+        if($update)
+        {
+                // Deklarasikan session flashdata dengan tipe warning
+            session()->setFlashdata('warning', 'Putaway Berhasil!');
+            // Redirect ke halaman product
+            return redirect()->to(base_url('receive/putaway_list'));
+        }
+    }
+
+    public function aborting($id)
+    {
+        $data = [
+            'tr_status_receive' => 5
+        ];
+        $update = $this->receive->update_tr($data, $id);
+    
+        // Jika berhasil melakukan hapus
+        if($update)
+        {
+                // Deklarasikan session flashdata dengan tipe warning
+            session()->setFlashdata('warning', 'Transaksi Dibatalkan!');
+            // Redirect ke halaman product
+            return redirect()->to(base_url('receive/index'));
+        }
+    }
     
     public function update($id)
     {

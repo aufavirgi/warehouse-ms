@@ -47,6 +47,72 @@ class TrReceiveDispatchModel extends Model
         }   
     }
 
+    public function getRequestByAdmin($id)
+    {
+        return $this->table('tr_receive_dispatch')
+                    ->select('tr_id, tr_date_in, ms_rak.rak_sektor, sek_nama, 
+                    tr_receive_dispatch.rak_id, rak_nama, tr_receiver_id, pen_nama, tr_status_receive')
+                    ->join('ms_rak', 
+                    'tr_receive_dispatch.rak_id=ms_rak.rak_id')
+                    ->join('ms_pengguna', 
+                    'tr_receive_dispatch.tr_receiver_id=ms_pengguna.pen_npk')
+                    ->join('ms_sektor', 
+                    'ms_rak.rak_sektor=ms_sektor.sek_id')
+                    ->where('tr_receiver_id', $id)
+                    ->where('tr_status_receive', 1)
+                    ->get();
+    }
+
+    public function getPickingUp($id)
+    {
+        return $this->table('tr_receive_dispatch')
+                    ->select('tr_id, tr_date_in, ms_rak.rak_sektor, sek_nama, 
+                    tr_receive_dispatch.rak_id, rak_nama, tr_receiver_id, pen_nama, tr_status_receive')
+                    ->join('ms_rak', 
+                    'tr_receive_dispatch.rak_id=ms_rak.rak_id')
+                    ->join('ms_pengguna', 
+                    'tr_receive_dispatch.tr_receiver_id=ms_pengguna.pen_npk')
+                    ->join('ms_sektor', 
+                    'ms_rak.rak_sektor=ms_sektor.sek_id')
+                    ->where('tr_receiver_id', $id)
+                    ->where('tr_status_receive', 2)
+                    ->get();
+    }
+
+    public function getDelivering($id)
+    {
+        return $this->table('tr_receive_dispatch')
+                    ->select('tr_id, tr_date_in, ms_rak.rak_sektor, sek_nama, 
+                    tr_receive_dispatch.rak_id, rak_nama, tr_receiver_id, pen_nama, tr_status_receive')
+                    ->join('ms_rak', 
+                    'tr_receive_dispatch.rak_id=ms_rak.rak_id')
+                    ->join('ms_pengguna', 
+                    'tr_receive_dispatch.tr_receiver_id=ms_pengguna.pen_npk')
+                    ->join('ms_sektor', 
+                    'ms_rak.rak_sektor=ms_sektor.sek_id')
+                    ->where('tr_receiver_id', $id)
+                    ->where('tr_status_receive', 3)
+                    ->get();
+    }
+
+    public function getPutPalette($id)
+    {
+        return $this->table('tr_receive_dispatch')
+                    ->select('tr_id, tr_date_in, ms_rak.rak_sektor, sek_nama, 
+                    tr_receive_dispatch.rak_id, rak_nama, tr_receiver_id, pen_nama, tr_status_receive')
+                    ->join('ms_rak', 
+                    'tr_receive_dispatch.rak_id=ms_rak.rak_id')
+                    ->join('ms_pengguna', 
+                    'tr_receive_dispatch.tr_receiver_id=ms_pengguna.pen_npk')
+                    ->join('ms_sektor', 
+                    'ms_rak.rak_sektor=ms_sektor.sek_id')
+                    ->where('tr_receiver_id', $id)
+                    ->where('tr_status_receive', 4)
+                    ->get();
+    }
+
+    //dispatch--------------------
+
     public function getDispatch($id = false, $date = false)
     {
         if($id === false){

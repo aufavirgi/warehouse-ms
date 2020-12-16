@@ -110,7 +110,7 @@ class Rak extends Controller
         $data = [
             'rak_status' => 0
         ];
-        $hapus = $this->pengguna->deactivate_rak($data, $id);
+        $hapus = $this->rak->deactivate_rak($data, $id);
     
         // Jika berhasil melakukan hapus
         if($hapus)
