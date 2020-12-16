@@ -45,6 +45,10 @@ class Receive extends Controller
         echo view('receive/index', $data);
     }
     
+    public function dispatch_view(){
+        $data['dispatch'] = $this->receive->getDispatch()->getResult();
+        echo view('receive/dispatch_view', $data);
+    }
     public function create()
     {
         $tr_id = $this->receive->selectMax('tr_id')->first();
@@ -282,7 +286,8 @@ class Receive extends Controller
             'tr_status_receive' => 5
         ];
         $update = $this->receive->update_tr($data, $id);
-    
+        //mengurangi jml_isi rak dan stok barang
+
         // Jika berhasil melakukan hapus
         if($update)
         {
@@ -292,35 +297,217 @@ class Receive extends Controller
             return redirect()->to(base_url('receive/index'));
         }
     }
+    //-------- DISPATCH MODULE
+
+    public function create_dispatch($id)
+    {
+        // Memanggil function getPengguna($id) dengan parameter $id di dalam ProductModel dan menampungnya di variabel array product
+        $data['pengguna'] = $this->pengguna->getDispatcher();
+        $data['receive'] = $this->receive->getReceive($id);
+        $data['detil'] = $this->detil->getDetil($id)->getResult();
+        // Mengirim data ke dalam view
+        return view('receive/create_dispatch', $data);
+    }
     
     public function update($id)
     {
         // Mengambil value dari form dengan method POST
         // $npk = $this->request->getPost('pen_npk');
-        $rak_sektor = $this->request->getPost('rak_sektor');
-        $rak_nama = $this->request->getPost('rak_nama');
-        $rak_max_capacity = $this->request->getPost('rak_max_capacity');
-    
-        // Membuat array collection yang disiapkan untuk insert ke table
+        $tr_date_out = date('Y-m-d');
+        $tr_dispatcher_id = $this->request->getPost('tr_dispatcher_id');
+        $rak_id = $this->request->getPost('rak_id');
         $data = [
-            'rak_sektor' => $rak_sektor,
-            'rak_nama' => $rak_nama,
-            'rak_max_capacity' => $rak_max_capacity
+            'tr_date_out' => $tr_date_out,
+            'tr_dispatcher_id' => $tr_dispatcher_id,
+            'tr_status_dispatch' => 1
         ];
-    
+
         /* 
         Membuat variabel ubah yang isinya merupakan memanggil function 
         update_product dan membawa parameter data beserta id
         */
-        $ubah = $this->rak->update_rak($data, $id);
+        $ubah = $this->receive->update_tr($data, $id);
+    
+        foreach ($this->detil->getDetil($id)->getResult() as $items) {
+        	$bar_id = $items->bar_id;
+            $qty = $items->tr_qty;
+            $stok_keluar = $items->tr_qty;
+            //insert detil
+        	// $d = array(
+        	// 	'tr_id' => $tr_id,
+        	// 	'bar_id' => $bar_id,
+        	// 	'tr_qty' => $qty,
+        	// );
+            // $this->detil->insert_detil($d);
+            // //update dan tambah stok barang --
+
+            $data_barang = $this->barang->where('bar_id', $bar_id)
+            ->where('bar_status', 1)->first();
+            $stok_lama = $data_barang['bar_stok'];
+            $stok_baru = $stok_lama - $stok_keluar;
+
+            $data_update_barang = [
+                'bar_stok' => $stok_baru
+            ];
+            /* 
+            Membuat variabel ubah yang isinya merupakan memanggil function 
+            update_product dan membawa parameter data beserta id
+            */
+            $ubah_barang = $this->barang->update_barang($data_update_barang, $bar_id);
+            
+        }
+        //update dan kurang isi rak --
+        $jml_palette_keluar = 1;
+        $data_rak = $this->rak->where('rak_id', $rak_id)
+            ->where('rak_status', 1)->first();
+        $jml_palette_lama = $data_rak['rak_jml_isi'];
+        $jml_palette_baru = $jml_palette_lama - $jml_palette_keluar;
+
+        $data_update_rak = [
+            'rak_jml_isi' => $jml_palette_baru
+        ];
         
+        $ubah_rak = $this->rak->update_rak($data_update_rak, $rak_id);
         // Jika berhasil melakukan ubah
         if($ubah)
         {
             // Deklarasikan session flashdata dengan tipe info
-            session()->setFlashdata('info', 'Data Rak Berhasil Diubah!');
+            session()->setFlashdata('info', 'Dispatch Request Sukses!');
             // Redirect ke halaman product
-            return redirect()->to(base_url('rak')); 
+            return redirect()->to(base_url('receive/dispatch_view')); 
+        }
+    }
+
+    //method untuk abort request dispatch ke dispatcher
+    public function abort_dispatch($id){
+        $tr_date_out = null;
+        $tr_dispatcher_id = null;
+        //ambil data transaksi
+        $data_tr = $this->receive->where('tr_id', $id)->first();
+        $rak_id = $data_tr['rak_id'];
+        $data = [
+            'tr_date_out' => $tr_date_out,
+            'tr_dispatcher_id' => $tr_dispatcher_id,
+            'tr_status_dispatch' => 0
+        ];
+
+        /* 
+        Membuat variabel ubah yang isinya merupakan memanggil function 
+        update_product dan membawa parameter data beserta id
+        */
+        $ubah = $this->receive->update_tr($data, $id);
+        
+        //ambil item2 berdasarkan transaksi
+        foreach ($this->detil->getDetil($id)->getResult() as $items) {
+        	$bar_id = $items->bar_id;
+            $qty = $items->tr_qty;
+            $stok_keluar_cancel = $items->tr_qty;
+            //insert detil
+        	// $d = array(
+        	// 	'tr_id' => $tr_id,
+        	// 	'bar_id' => $bar_id,
+        	// 	'tr_qty' => $qty,
+        	// );
+            // $this->detil->insert_detil($d);
+            // //update dan tambah stok barang --
+
+            $data_barang = $this->barang->where('bar_id', $bar_id)
+            ->where('bar_status', 1)->first();
+            $stok_lama = $data_barang['bar_stok'];
+            $stok_baru = $stok_lama + $stok_keluar_cancel;
+
+            $data_update_barang = [
+                'bar_stok' => $stok_baru
+            ];
+            /* 
+            Membuat variabel ubah yang isinya merupakan memanggil function 
+            update_product dan membawa parameter data beserta id
+            */
+            $ubah_barang = $this->barang->update_barang($data_update_barang, $bar_id);
+            
+        }
+        //update dan kurang isi rak --
+        $jml_palette_keluar_cancel = 1;
+        $data_rak = $this->rak->where('rak_id', $rak_id)
+            ->where('rak_status', 1)->first();
+        $jml_palette_lama = $data_rak['rak_jml_isi'];
+        $jml_palette_baru = $jml_palette_lama + $jml_palette_keluar_cancel;
+
+        $data_update_rak = [
+            'rak_jml_isi' => $jml_palette_baru
+        ];
+        
+        $ubah_rak = $this->rak->update_rak($data_update_rak, $rak_id);
+        // Jika berhasil melakukan ubah
+        if($ubah)
+        {
+            // Deklarasikan session flashdata dengan tipe info
+            session()->setFlashdata('info', 'Dispatch Request Aborted!');
+            // Redirect ke halaman product
+            return redirect()->to(base_url('receive/dispatch_view')); 
+        }
+    }
+
+    public function dispatch_list()
+    {
+        $sesi = session();
+        $dispatcher_id = $sesi->get('pen_npk');
+        $data['request'] = $this->receive->getRequestDispatch($dispatcher_id)->getResult();
+        $data['pickup'] = $this->receive->getDispatchPickUp($dispatcher_id)->getResult();
+        $data['deliver'] = $this->receive->getDispatching($dispatcher_id)->getResult();
+        $data['dispatched'] = $this->receive->getDispatched($dispatcher_id)->getResult();
+
+        return view('receive/dispatch_list', $data);
+    }
+
+    public function dispatchpickingup($id)
+    {
+        $data = [
+            'tr_status_dispatch' => 2
+        ];
+        $update = $this->receive->update_tr($data, $id);
+    
+        // Jika berhasil melakukan hapus
+        if($update)
+        {
+                // Deklarasikan session flashdata dengan tipe warning
+            session()->setFlashdata('warning', 'Silahkan Mengambil Palette!');
+            // Redirect ke halaman product
+            return redirect()->to(base_url('receive/dispatch_list'));
+        }
+    }
+
+    public function dispatchdelivering($id)
+    {
+        $data = [
+            'tr_status_dispatch' => 3
+        ];
+        $update = $this->receive->update_tr($data, $id);
+    
+        // Jika berhasil melakukan hapus
+        if($update)
+        {
+                // Deklarasikan session flashdata dengan tipe warning
+            session()->setFlashdata('warning', 'Silahkan Masukkan Palette ke Rak!');
+            // Redirect ke halaman product
+            return redirect()->to(base_url('receive/dispatch_list'));
+        }
+    }
+
+    public function dispatching($id)
+    {
+        $data = [
+            'tr_status_dispatch' => 4
+        ];
+        $update = $this->receive->update_tr($data, $id);
+    
+        // Jika berhasil melakukan hapus
+        if($update)
+        {
+                // Deklarasikan session flashdata dengan tipe warning
+            session()->setFlashdata('warning', 'Dispatch Berhasil!');
+            // Redirect ke halaman product
+            return redirect()->to(base_url('receive/dispatch_list'));
         }
     }
 

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Warehouse MS - Admin</title>
+    <title>Warehouse MS - Dispatcher</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/images/favicon.png') ?>">
     <!-- Pignose Calender -->
@@ -127,19 +127,14 @@
                     <ul class="metismenu in" id="menu">
 
                         <li class="mega-menu mega-menu-sm">
-                            <a href="<?=  base_url('dashboard/admin')?>" aria-expanded="false">
+                            <a href="<?=  base_url('dashboard/dispatcher')?>" aria-expanded="false">
                                 <i class="icon-home menu-icon"></i><span class="nav-text">Home</span>
                             </a>
                         </li>
-                        <li class="nav-label">Data Transaksi</li>
+                        <li class="nav-label">List Palette Keluar</li>
                         <li>
-                            <a href="<?=  base_url('receive/index')?>" aria-expanded="false">
-                                <i class="icon-user menu-icon"></i><span class="nav-text">Transaksi Barang Masuk</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?=  base_url('receive/dispatch_view')?>" aria-expanded="false">
-                                <i class="icon-grid menu-icon"></i><span class="nav-text">Transaksi Barang Keluar</span>
+                            <a href="<?=  base_url('receive/dispatch_list')?>" aria-expanded="false">
+                                <i class="icon-note menu-icon"></i><span class="nav-text">Dispatch Barang</span>
                             </a>
                         </li>
                     </ul>

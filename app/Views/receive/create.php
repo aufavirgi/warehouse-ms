@@ -112,7 +112,8 @@
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="<?php echo base_url('rak/index'); ?>" class="btn mb-1 btn-outline-secondary">Batal</a>
+                        <a href="<?php echo base_url('receive/index'); ?>"
+                            class="btn mb-1 btn-outline-secondary">Batal</a>
                     </div>
                 </form>
             </div>
