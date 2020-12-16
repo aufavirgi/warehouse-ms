@@ -29,8 +29,25 @@ class Login extends Controller
                     'pen_role'      => $data['pen_role'],
                     'logged_in'     => TRUE
                 ];
+                $role=$data['pen_role'];
                 $session->set($ses_data);
-                return redirect()->to('/dashboard/index');
+                switch ($role) {
+                    case "Super Admin":
+                        return redirect()->to('/dashboard/index');
+                      break;
+                    case "Admin Gudang":
+                        return redirect()->to('/dashboard/admin');
+                      break;
+                    case "Receiver":
+                        return redirect()->to('/dashboard/receiver');
+                      break;
+                    case "Dispatcher":
+                        return redirect()->to('/dashboard/dispatcher');
+                      break;
+                    default:
+                        return redirect()->to('/dashboard/index');
+                  }
+                
             }else{
                 $session->setFlashdata('msg', 'Wrong Password');
                 return redirect()->to('/login');

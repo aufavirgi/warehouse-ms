@@ -27,6 +27,15 @@ class MsBarangModel extends Model
                         ->getRowArray();
         }   
     }
+
+    public function getBarangBySektor($id){
+        $builder = $this->db->table('ms_barang')
+        ->select('bar_id, bar_nama, bar_kategori, bar_stok')
+        ->where('bar_kategori', $id)
+        ->where('bar_status', 1)
+        ->get();
+        return $builder->getResult();
+    }
     
     public function insert_barang($data)
     {

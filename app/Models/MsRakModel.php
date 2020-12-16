@@ -36,6 +36,16 @@ class MsRakModel extends Model
             // return $builder->get();
         }   
     }
+
+    public function getRakBySektor($id){
+        $builder = $this->db->table('ms_rak')
+        ->select('rak_id, rak_sektor, rak_nama, rak_jml_isi, 
+        rak_max_capacity')
+        ->where('rak_sektor', $id)
+        ->where('rak_status', 1)
+        ->get();
+        return $builder->getResult();
+    }
     
     public function insert_rak($data)
     {

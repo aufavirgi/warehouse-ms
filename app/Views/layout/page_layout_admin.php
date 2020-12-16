@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Warehouse MS</title>
+    <title>Warehouse MS - Admin</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/images/favicon.png') ?>">
     <!-- Pignose Calender -->
@@ -127,29 +127,19 @@
                     <ul class="metismenu in" id="menu">
 
                         <li class="mega-menu mega-menu-sm">
-                            <a href="<?=  base_url('dashboard/index')?>" aria-expanded="false">
+                            <a href="<?=  base_url('dashboard/admin')?>" aria-expanded="false">
                                 <i class="icon-home menu-icon"></i><span class="nav-text">Home</span>
                             </a>
                         </li>
-                        <li class="nav-label">Master Data</li>
+                        <li class="nav-label">Data Transaksi</li>
                         <li>
-                            <a href="<?=  base_url('pengguna/index')?>" aria-expanded="false">
-                                <i class="icon-user menu-icon"></i><span class="nav-text">Kelola Data Pengguna</span>
+                            <a href="<?=  base_url('receive/index')?>" aria-expanded="false">
+                                <i class="icon-user menu-icon"></i><span class="nav-text">Transaksi Barang Masuk</span>
                             </a>
                         </li>
                         <li>
-                            <a href="<?=  base_url('sektor/index')?>" aria-expanded="false">
-                                <i class="icon-grid menu-icon"></i><span class="nav-text">Kelola Data Sektor</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?=  base_url('rak/index')?>" aria-expanded="false">
-                                <i class="icon-badge menu-icon"></i><span class="nav-text">Kelola Data Rak</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?=  base_url('barang/index')?>" aria-expanded="false">
-                                <i class="icon-badge menu-icon"></i><span class="nav-text">Kelola Data Barang</span>
+                            <a href="<?=  base_url('dispatch/index')?>" aria-expanded="false">
+                                <i class="icon-grid menu-icon"></i><span class="nav-text">Transaksi Barang Keluar</span>
                             </a>
                         </li>
                     </ul>
@@ -203,12 +193,13 @@
     <!--**********************************
         Scripts
     ***********************************-->
-    <script type="text/javascript" src="<?= base_url('assets/js/jquery-3.3.1.js') ?>"></script>
+
     <script src="<?= base_url('assets/plugins/common/common.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/custom.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/settings.js') ?>"></script>
     <script src="<?= base_url('assets/js/gleek.js') ?>"></script>
     <script src="<?= base_url('assets/js/styleSwitcher.js') ?>"></script>
+
 
     <!-- Chartjs -->
     <script src="<?= base_url('./assets/plugins/chart.js/Chart.bundle.min.js') ?>"></script>

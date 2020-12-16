@@ -23,9 +23,8 @@
                         <select required name="pen_role" class="form-control">
                             <option disabled selected>Pilih Role... </option>
                             <option value="Receiver">Receiver</option>
-                            <option value="Operator">Operator</option>
+                            <option value="Admin Gudangs">Admin Gudang</option>
                             <option value="Dispatcher">Dispatcher</option>
-                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <div class="form-group">

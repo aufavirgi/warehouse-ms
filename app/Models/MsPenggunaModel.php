@@ -18,6 +18,8 @@ class MsPenggunaModel extends Model
             $builder = $this->db->table('ms_pengguna');
             $builder->select('*');
             $where = 'pen_status = 1';
+            $session = session();
+            $builder->where('pen_npk !=' .$session->get('pen_npk'));
             $builder->where($where);
             return $builder->get();
         } else {

@@ -27,9 +27,8 @@
                                 <?php echo $pengguna['pen_role']; ?>
                             </option>
                             <option value="Receiver">Receiver</option>
-                            <option value="Operator">Operator</option>
+                            <option value="Admin Gudang">Admin Gudang</option>
                             <option value="Dispatcher">Dispatcher</option>
-                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <div class="form-group">
